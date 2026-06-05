@@ -15,8 +15,18 @@
             </h2>
 
             <form method="post">
-
+                
                 {% csrf_token %}
+
+                {% if form.non_field_errors %}
+
+                    <div class="alert alert-danger">
+
+                        {{ form.non_field_errors }}
+
+                    </div>
+
+                {% endif %}
 
                 {% for field in form %}
 
@@ -59,5 +69,54 @@
     </div>
 
 </div>
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const statusField =
+            document.getElementById("id_status");
+
+        const interviewDate =
+            document.getElementById("id_interview_date")
+                .closest(".mb-3");
+
+        const interviewTime =
+            document.getElementById("id_interview_time")
+                .closest(".mb-3");
+
+        function toggleFields() {
+
+            if (
+                statusField.value === "Interview"
+            ) {
+
+                interviewDate.style.display = "";
+
+                interviewTime.style.display = "";
+
+            }
+
+            else {
+
+                interviewDate.style.display = "none";
+
+                interviewTime.style.display = "none";
+
+            }
+        }
+
+        toggleFields();
+
+        statusField.addEventListener(
+            "change",
+            toggleFields
+        );
+
+    });
+
+</script>
 
 {% endblock %}

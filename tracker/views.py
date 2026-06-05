@@ -9,6 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
+from datetime import date
 
 def register(request):
 
@@ -44,7 +45,17 @@ def dashboard(request):
     recent_applications = Application.objects.filter(user=request.user).order_by("-created_at")[:5]
     total_applications = applications.count()
     offers = applications.filter(status="Offer").count()
-
+    upcoming_interviews = (
+        applications
+        .filter(
+            status="Interview",
+            interview_date__gte=date.today()
+        )
+        .order_by(
+            "interview_date",
+            "interview_time"
+        )[:5]
+    )
     success_rate = 0
 
     if total_applications > 0:
@@ -76,6 +87,7 @@ def dashboard(request):
 
         "recent_applications": recent_applications,
         "success_rate": success_rate,
+        "upcoming_interviews": upcoming_interviews,
     }
 
     return render(

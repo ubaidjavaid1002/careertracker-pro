@@ -51,6 +51,15 @@ class Application(models.Model):
     notes = models.TextField(
         blank=True
     )
+    interview_date = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    interview_time = models.TimeField(
+        null=True,
+        blank=True
+    )
 
     created_at = models.DateTimeField(
         auto_now_add=True

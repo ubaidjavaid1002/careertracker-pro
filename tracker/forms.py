@@ -18,6 +18,8 @@ class ApplicationForm(forms.ModelForm):
             "source",
             "status",
             "applied_date",
+            "interview_date",
+            "interview_time",
             "notes",
         ]
 
@@ -29,7 +31,19 @@ class ApplicationForm(forms.ModelForm):
                         "type": "date"
                     }
                 ),
+            "interview_date": forms.DateInput(
+                attrs={
+                    "type": "date",
+                    "class": "form-control"
+                }
+            ),
 
+            "interview_time": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "form-control"
+                }
+            ),
             "notes":
                 forms.Textarea(
                     attrs={
@@ -47,6 +61,23 @@ class ApplicationForm(forms.ModelForm):
             field.widget.attrs.update({
                 "class": "form-control"
             })
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        status = cleaned_data.get("status")
+
+        interview_date = cleaned_data.get(
+            "interview_date"
+        )
+
+        if status == "Interview" and not interview_date:
+
+            raise forms.ValidationError(
+                "Interview date is required when status is Interview."
+            )
+
+        return cleaned_data
 
 class RegisterForm(UserCreationForm):
 

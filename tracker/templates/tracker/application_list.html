@@ -118,6 +118,7 @@
             <th>Status</th>
             <th>Source</th>
             <th>Date</th>
+            <th>Interview</th>
             <th>Actions</th>
         </tr>
 
@@ -159,6 +160,27 @@
             <td>{{ app.source }}</td>
 
             <td>{{ app.applied_date }}</td>
+
+            <td>
+
+                {% if app.interview_date and app.status == 'Interview' %}
+
+                    {{ app.interview_date }}
+
+                    <br>
+                    <small>
+
+                        {{ app.interview_time }}
+
+                    </small>
+
+                {% else %}
+
+                    -
+
+                {% endif %}
+
+            </td>
 
             <td>
 
