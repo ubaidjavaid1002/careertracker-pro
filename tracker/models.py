@@ -1,8 +1,15 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 
 class Application(models.Model):
 
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    
     STATUS_CHOICES = [
         ('Applied', 'Applied'),
         ('Screening', 'Screening'),
@@ -55,3 +62,17 @@ class Application(models.Model):
 
     def __str__(self):
         return f"{self.company} - {self.position}"
+    
+class Profile(models.Model):
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    target_applications = models.IntegerField(
+        default=100
+    )
+
+    def __str__(self):
+        return self.user.username
