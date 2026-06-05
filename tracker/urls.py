@@ -20,4 +20,15 @@ urlpatterns = [
         views.application_create,
         name="application_create"
     ),
+    path(
+        "applications/<int:pk>/edit/",
+        views.application_update,
+        name="application_update"
+    ),
+
+    path(
+        "applications/<int:pk>/delete/",
+        views.application_delete,
+        name="application_delete"
+    ),
 ]

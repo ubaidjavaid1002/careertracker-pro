@@ -1,0 +1,119 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+
+<div class="row mb-4">
+
+    <div class="col-md-3 mb-3">
+        <div class="card p-3">
+            <h6>Total Applications</h6>
+            <h2>{{ total_applications }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card p-3">
+            <h6>Interviews</h6>
+            <h2>{{ interviews }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card p-3">
+            <h6>Offers</h6>
+            <h2>{{ offers }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card p-3">
+            <h6>Rejections</h6>
+            <h2>{{ rejections }}</h2>
+        </div>
+    </div>
+
+</div>
+
+<div class="card p-4">
+
+    <div class="d-flex justify-content-between align-items-center">
+
+        <h4>Applications</h4>
+
+        <a href="{% url 'application_create' %}"
+           class="btn btn-primary">
+
+            Add Application
+
+        </a>
+
+    </div>
+
+    <hr>
+
+    <a href="{% url 'application_list' %}"
+       class="btn btn-outline-light">
+
+        View All Applications
+
+    </a>
+
+</div>
+
+<div class="card p-4">
+
+    <h4 class="mb-3">
+
+        Recent Applications
+
+    </h4>
+
+    <table class="table table-dark">
+
+        <thead>
+
+            <tr>
+
+                <th>Company</th>
+                <th>Position</th>
+                <th>Status</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for app in recent_applications %}
+
+            <tr>
+
+                <td>{{ app.company }}</td>
+
+                <td>{{ app.position }}</td>
+
+                <td>{{ app.status }}</td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="3">
+
+                    No applications yet.
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}
