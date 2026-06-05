@@ -31,4 +31,9 @@ urlpatterns = [
         views.application_delete,
         name="application_delete"
     ),
+    path(
+        "applications/<int:pk>/status/<str:new_status>/",
+        views.update_status,
+        name="update_status"
+    ),
 ]

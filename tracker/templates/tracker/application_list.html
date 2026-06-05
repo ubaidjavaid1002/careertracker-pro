@@ -15,6 +15,97 @@
 
 </div>
 
+<form method="get" class="mb-4">
+
+    <div class="row">
+
+        <div class="col-md-5">
+
+            <input
+                type="text"
+                name="search"
+                class="form-control"
+                placeholder="Search company or position..."
+                value="{{ search|default:'' }}"
+            >
+
+        </div>
+
+        <div class="col-md-3">
+
+            <select
+                name="status"
+                class="form-select"
+            >
+
+                <option value="">
+                    All Statuses
+                </option>
+
+                <option value="Applied"
+                {% if selected_status == "Applied" %}
+                selected
+                {% endif %}
+                >
+                    Applied
+                </option>
+
+                <option value="Interview"
+                {% if selected_status == "Interview" %}
+                selected
+                {% endif %}
+                >
+                    Interview
+                </option>
+
+                <option value="Offer"
+                {% if selected_status == "Offer" %}
+                selected
+                {% endif %}
+                >
+                    Offer
+                </option>
+
+                <option value="Rejected"
+                {% if selected_status == "Rejected" %}
+                selected
+                {% endif %}
+                >
+                    Rejected
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="col-md-2">
+
+            <button
+                type="submit"
+                class="btn btn-primary w-100">
+
+                Filter
+
+            </button>
+
+        </div>
+
+        <div class="col-md-2">
+
+            <a
+                href="{% url 'application_list' %}"
+                class="btn btn-secondary w-100">
+
+                Reset
+
+            </a>
+
+        </div>
+
+    </div>
+
+</form>
+
 <div class="card p-3">
 
 <table class="table table-dark table-hover">
@@ -71,19 +162,45 @@
 
             <td>
 
-                <a href="{% url 'application_update' app.id %}"
-                class="btn btn-sm btn-warning">
+                <div class="d-flex gap-1 flex-wrap">
 
-                    Edit
+                    
 
-                </a>
+                    <a
+                        href="{% url 'update_status' app.id 'Interview' %}"
+                        class="btn btn-sm btn-warning">
 
-                <a href="{% url 'application_delete' app.id %}"
-                class="btn btn-sm btn-danger">
+                        Interview
+                    </a>
 
-                    Delete
+                    <a
+                        href="{% url 'update_status' app.id 'Offer' %}"
+                        class="btn btn-sm btn-success">
 
-                </a>
+                        Offer
+                    </a>
+
+                    <a
+                        href="{% url 'update_status' app.id 'Rejected' %}"
+                        class="btn btn-sm btn-danger">
+
+                        Reject
+                    </a>
+
+                    <a
+                        href="{% url 'application_update' app.id %}"
+                        class="btn btn-sm btn-secondary">
+
+                        Edit
+                    </a>
+
+                    <a href="{% url 'application_delete' app.id %}"
+                    class="btn btn-sm btn-danger">
+
+                        Delete
+
+                    </a>
+                </div>
 
             </td>
 
