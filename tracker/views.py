@@ -12,6 +12,7 @@ from django.contrib.auth import login
 from datetime import date
 from django.db.models import Count
 import json
+from django.core.paginator import Paginator
 
 def register(request):
 
@@ -156,6 +157,17 @@ def application_list(request):
             status=status
         )
 
+    paginator = Paginator(
+        applications,
+        10
+    )
+
+    page_number = request.GET.get('page')
+
+    applications = paginator.get_page(
+        page_number
+    )
+    
     context = {
 
         "applications": applications,

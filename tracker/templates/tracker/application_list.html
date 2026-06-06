@@ -108,144 +108,171 @@
 
 <div class="card p-3">
 
-<table class="table table-dark table-hover">
+    <table class="table table-dark table-hover">
 
-    <thead>
+        <thead>
 
-        <tr>
-            <th>Company</th>
-            <th>Position</th>
-            <th>Status</th>
-            <th>Source</th>
-            <th>Date</th>
-            <th>Interview</th>
-            <th>Actions</th>
-        </tr>
+            <tr>
+                <th>Company</th>
+                <th>Position</th>
+                <th>Status</th>
+                <th>Source</th>
+                <th>Date</th>
+                <th>Interview</th>
+                <th>Actions</th>
+            </tr>
 
-    </thead>
+        </thead>
 
-    <tbody>
+        <tbody>
 
-        {% for app in applications %}
+            {% for app in applications %}
 
-        <tr>
+            <tr>
 
-            <td>{{ app.company }}</td>
+                <td>{{ app.company }}</td>
 
-            <td>{{ app.position }}</td>
+                <td>{{ app.position }}</td>
 
-            <td>
+                <td>
 
-                {% if app.status == 'Applied' %}
-                <span class="badge bg-primary">Applied</span>
+                    {% if app.status == 'Applied' %}
+                    <span class="badge bg-primary">Applied</span>
 
-                {% elif app.status == 'Interview' %}
-                <span class="badge bg-warning text-dark">Interview</span>
+                    {% elif app.status == 'Interview' %}
+                    <span class="badge bg-warning text-dark">Interview</span>
 
-                {% elif app.status == 'Offer' %}
-                <span class="badge bg-success">Offer</span>
+                    {% elif app.status == 'Offer' %}
+                    <span class="badge bg-success">Offer</span>
 
-                {% elif app.status == 'Rejected' %}
-                <span class="badge bg-danger">Rejected</span>
+                    {% elif app.status == 'Rejected' %}
+                    <span class="badge bg-danger">Rejected</span>
 
-                {% else %}
-                <span class="badge bg-secondary">
-                {{ app.status }}
-                </span>
+                    {% else %}
+                    <span class="badge bg-secondary">
+                    {{ app.status }}
+                    </span>
 
-                {% endif %}
+                    {% endif %}
 
-            </td>
+                </td>
 
-            <td>{{ app.source }}</td>
+                <td>{{ app.source }}</td>
 
-            <td>{{ app.applied_date }}</td>
+                <td>{{ app.applied_date }}</td>
 
-            <td>
+                <td>
 
-                {% if app.interview_date and app.status == 'Interview' %}
+                    {% if app.interview_date and app.status == 'Interview' %}
 
-                    {{ app.interview_date }}
+                        {{ app.interview_date }}
 
-                    <br>
-                    <small>
+                        <br>
+                        <small>
 
-                        {{ app.interview_time }}
+                            {{ app.interview_time }}
 
-                    </small>
+                        </small>
 
-                {% else %}
+                    {% else %}
 
-                    -
+                        -
 
-                {% endif %}
+                    {% endif %}
 
-            </td>
+                </td>
 
-            <td>
+                <td>
 
-                <div class="d-flex gap-1 flex-wrap">
+                    <div class="d-flex gap-1 flex-wrap">
 
-                    
+                        
 
-                    <a
-                        href="{% url 'update_status' app.id 'Interview' %}"
-                        class="btn btn-sm btn-warning">
+                        <a
+                            href="{% url 'update_status' app.id 'Interview' %}"
+                            class="btn btn-sm btn-warning">
 
-                        Interview
-                    </a>
+                            Interview
+                        </a>
 
-                    <a
-                        href="{% url 'update_status' app.id 'Offer' %}"
-                        class="btn btn-sm btn-success">
+                        <a
+                            href="{% url 'update_status' app.id 'Offer' %}"
+                            class="btn btn-sm btn-success">
 
-                        Offer
-                    </a>
+                            Offer
+                        </a>
 
-                    <a
-                        href="{% url 'update_status' app.id 'Rejected' %}"
+                        <a
+                            href="{% url 'update_status' app.id 'Rejected' %}"
+                            class="btn btn-sm btn-danger">
+
+                            Reject
+                        </a>
+
+                        <a
+                            href="{% url 'application_update' app.id %}"
+                            class="btn btn-sm btn-secondary">
+
+                            Edit
+                        </a>
+
+                        <a href="{% url 'application_delete' app.id %}"
                         class="btn btn-sm btn-danger">
 
-                        Reject
-                    </a>
+                            Delete
+
+                        </a>
+                    </div>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="7">
+
+                    No applications added yet.
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+    
+    {% if applications.paginator.num_pages > 1 %}
+
+    <nav class="mt-4">
+
+        <ul class="pagination justify-content-center">
+
+            {% for num in applications.paginator.page_range %}
+
+                <li class="page-item {% if applications.number == num %}active{% endif %}">
 
                     <a
-                        href="{% url 'application_update' app.id %}"
-                        class="btn btn-sm btn-secondary">
+                        class="page-link"
+                        href="?page={{ num }}">
 
-                        Edit
-                    </a>
-
-                    <a href="{% url 'application_delete' app.id %}"
-                    class="btn btn-sm btn-danger">
-
-                        Delete
+                        {{ num }}
 
                     </a>
-                </div>
 
-            </td>
+                </li>
 
-        </tr>
+            {% endfor %}
 
-        {% empty %}
+        </ul>
 
-        <tr>
+    </nav>
 
-            <td colspan="6">
-
-                No applications added yet.
-
-            </td>
-
-        </tr>
-
-        {% endfor %}
-
-    </tbody>
-
-</table>
-
+    {% endif %}
 </div>
 
 {% endblock %}
