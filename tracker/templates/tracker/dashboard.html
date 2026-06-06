@@ -54,19 +54,112 @@
 
 </div>
 
-{% if upcoming_interviews %}
+<div class="row mt-4">
 
-<div class="card mb-4">
+    <div class="col-md-6">
 
-    <div class="card-body">
+        <div class="card p-3 mb-4">
 
-        <h5 class="mb-3">
+            <h5>Applications by Status</h5>
+            <div style="height:250px;">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
 
-            Upcoming Interviews
+        {% if upcoming_interviews %}
 
-        </h5>
+        <div class="card mb-4">
 
-        <div class="table-responsive">
+            <div class="card-body">
+
+                <h5 class="mb-3">
+
+                    Upcoming Interviews
+
+                </h5>
+
+                <div class="table-responsive">
+
+                    <table class="table table-dark">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Company</th>
+                                <th>Position</th>
+                                <th>Date</th>
+                                <th>Time</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for interview in upcoming_interviews %}
+
+                            <tr>
+
+                                <td>
+
+                                    {{ interview.company }}
+
+                                </td>
+
+                                <td>
+
+                                    {{ interview.position }}
+
+                                </td>
+
+                                <td>
+
+                                    {{ interview.interview_date }}
+
+                                </td>
+
+                                <td>
+
+                                    {{ interview.interview_time|default:"-" }}
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+        
+    </div>
+
+    <div class="col-lg-6">
+        
+        <div class="card p-3 mb-3">
+
+            <h5>Applications by Source</h5>
+            <div>
+                <canvas id="sourceChart"></canvas>
+            </div>
+        </div>
+        <!-- Recent Applications Card -->
+        <div class="card p-4">
+
+            <h4 class="mb-3">
+
+                Recent Applications
+
+            </h4>
 
             <table class="table table-dark">
 
@@ -76,8 +169,8 @@
 
                         <th>Company</th>
                         <th>Position</th>
-                        <th>Date</th>
-                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Interview Date</th>
 
                     </tr>
 
@@ -85,31 +178,39 @@
 
                 <tbody>
 
-                    {% for interview in upcoming_interviews %}
+                    {% for app in recent_applications %}
 
                     <tr>
 
+                        <td>{{ app.company }}</td>
+
+                        <td>{{ app.position }}</td>
+
+                        <td>{{ app.status }}</td>
+
                         <td>
 
-                            {{ interview.company }}
+                            {% if app.interview_date %}
+
+                                {{ app.interview_date }}
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
 
                         </td>
 
-                        <td>
+                    </tr>
 
-                            {{ interview.position }}
+                    {% empty %}
 
-                        </td>
+                    <tr>
 
-                        <td>
+                        <td colspan="4">
 
-                            {{ interview.interview_date }}
-
-                        </td>
-
-                        <td>
-
-                            {{ interview.interview_time|default:"-" }}
+                            No applications yet.
 
                         </td>
 
@@ -122,82 +223,67 @@
             </table>
 
         </div>
-
     </div>
 
 </div>
 
-{% endif %}
 
-<div class="card p-4">
 
-    <h4 class="mb-3">
 
-        Recent Applications
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    </h4>
+<script>
+const statusLabels = JSON.parse(
+    '{{ status_labels|escapejs }}'
+);
 
-    <table class="table table-dark">
+const statusData = JSON.parse(
+    '{{ status_data|escapejs }}'
+);
 
-        <thead>
+const sourceLabels = JSON.parse(
+    '{{ source_labels|escapejs }}'
+);
 
-            <tr>
+const sourceData = JSON.parse(
+    '{{ source_data|escapejs }}'
+);
 
-                <th>Company</th>
-                <th>Position</th>
-                <th>Status</th>
-                <th>Interview Date</th>
+const statusChart = new Chart(
+    document.getElementById('statusChart'),
+    {
+        type: 'pie',
+        data: {
+            labels:  statusLabels,
+            datasets: [{
+                data: statusData,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right'
+                }
+            }
+        }
+    }
+);
 
-            </tr>
+const sourceChart = new Chart(
+    document.getElementById('sourceChart'),
+    {
+        type: 'bar',
+        data: {
+            labels: sourceLabels,
+            datasets: [{
+                label: 'Applications',
+                data: sourceData
+            }]
+        }
+    }
+);
 
-        </thead>
-
-        <tbody>
-
-            {% for app in recent_applications %}
-
-            <tr>
-
-                <td>{{ app.company }}</td>
-
-                <td>{{ app.position }}</td>
-
-                <td>{{ app.status }}</td>
-
-                <td>
-
-                    {% if app.interview_date %}
-
-                        {{ app.interview_date }}
-
-                    {% else %}
-
-                        -
-
-                    {% endif %}
-
-                </td>
-
-            </tr>
-
-            {% empty %}
-
-            <tr>
-
-                <td colspan="4">
-
-                    No applications yet.
-
-                </td>
-
-            </tr>
-
-            {% endfor %}
-
-        </tbody>
-
-    </table>
-
-</div>
-
+</script>
 {% endblock %}

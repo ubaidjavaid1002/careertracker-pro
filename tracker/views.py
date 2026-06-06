@@ -10,6 +10,8 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from datetime import date
+from django.db.models import Count
+import json
 
 def register(request):
 
@@ -64,6 +66,36 @@ def dashboard(request):
             1
         )
 
+    status_labels = [
+        "Applied",
+        "Interview",
+        "Offer",
+        "Rejected"
+    ]
+
+    status_data = [
+        applications.filter(status="Applied").count(),
+        applications.filter(status="Interview").count(),
+        applications.filter(status="Offer").count(),
+        applications.filter(status="Rejected").count(),
+    ]
+
+    source_labels = [
+        "LinkedIn",
+        "Indeed",
+        "Rozee",
+        "Referral",
+        "Company Website"
+    ]
+
+    source_data = [
+        applications.filter(source="LinkedIn").count(),
+        applications.filter(source="Indeed").count(),
+        applications.filter(source="Rozee").count(),
+        applications.filter(source="Referral").count(),
+        applications.filter(source="Company Website").count(),
+    ]
+
     context = {
 
         "total_applications":total_applications,
@@ -88,6 +120,11 @@ def dashboard(request):
         "recent_applications": recent_applications,
         "success_rate": success_rate,
         "upcoming_interviews": upcoming_interviews,
+        
+        "status_labels": json.dumps(status_labels),
+        "status_data": json.dumps(status_data),
+        "source_labels": json.dumps(source_labels),
+        "source_data": json.dumps(source_data),
     }
 
     return render(
