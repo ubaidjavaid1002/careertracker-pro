@@ -258,7 +258,7 @@
 
                     <a
                         class="page-link"
-                        href="?page={{ num }}">
+                        href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}">
 
                         {{ num }}
 

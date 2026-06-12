@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 
+from tracker.serializers import ApplicationSerializer
+
 from .models import Application
 from .forms import ApplicationForm, RegisterForm
 from django.shortcuts import get_object_or_404
@@ -13,6 +15,8 @@ from datetime import date
 from django.db.models import Count
 import json
 from django.core.paginator import Paginator
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 def register(request):
 
@@ -286,3 +290,56 @@ def update_status(
     return redirect(
         "application_list"
     )
+
+@api_view(["GET"])
+def application_api(request):
+
+    applications = (
+        Application.objects
+        .filter(user=request.user)
+    )
+
+    serializer = ApplicationSerializer(
+        applications,
+        many=True
+    )
+
+    return Response(
+        serializer.data
+    )
+
+@api_view(["GET"])
+def dashboard_api(request):
+
+    applications = (
+        Application.objects
+        .filter(user=request.user)
+    )
+
+    data = {
+
+        "total":
+            applications.count(),
+
+        "applied":
+            applications.filter(
+                status="Applied"
+            ).count(),
+
+        "interviews":
+            applications.filter(
+                status="Interview"
+            ).count(),
+
+        "offers":
+            applications.filter(
+                status="Offer"
+            ).count(),
+
+        "rejections":
+            applications.filter(
+                status="Rejected"
+            ).count(),
+    }
+
+    return Response(data)

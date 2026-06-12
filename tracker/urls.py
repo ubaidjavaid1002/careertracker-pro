@@ -59,4 +59,15 @@ urlpatterns = [
         views.update_status,
         name="update_status"
     ),
+    path(
+        "api/applications/",
+        views.application_api,
+        name="application_api"
+    ),
+
+    path(
+        "api/dashboard/",
+        views.dashboard_api,
+        name="dashboard_api"
+    ),
 ]
